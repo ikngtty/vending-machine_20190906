@@ -1,11 +1,13 @@
 package vendor
 
-type VendingMachine struct{}
+type VendingMachine struct {
+	beverage string
+}
 
-func New() *VendingMachine {
-	return &VendingMachine{}
+func New(beverage string) *VendingMachine {
+	return &VendingMachine{beverage: beverage}
 }
 
 func (vm *VendingMachine) Push() string {
-	return "Cola"
+	return vm.beverage
 }
