@@ -17,12 +17,17 @@ func New(products []string) *VendingMachine {
 	}
 }
 
-func (vm *VendingMachine) Push() string {
-	if vm.coinCount <= 0 {
-		return ""
+func (vm *VendingMachine) Push(button int) (string, error) {
+	if button < 0 || button >= len(vm.products) {
+		return "", fmt.Errorf("given button does not exist: %d", button)
 	}
+
+	if vm.coinCount <= 0 {
+		return "", nil
+	}
+
 	vm.coinCount -= 1
-	return vm.products[0]
+	return vm.products[button], nil
 }
 
 func (vm *VendingMachine) Insert100Yen() {
