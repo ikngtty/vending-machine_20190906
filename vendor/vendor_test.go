@@ -1,8 +1,13 @@
 package vendor
 
-import "testing"
+import (
+	"log"
+	"testing"
+)
 
 func TestVendingMachine_noCoin(t *testing.T) {
+	log.Print("no coin")
+
 	const beverage = "Cola"
 	vm := New(beverage)
 
@@ -16,6 +21,8 @@ func TestVendingMachine_noCoin(t *testing.T) {
 }
 
 func TestVendingMachine_1Coin(t *testing.T) {
+	log.Print("1 coin")
+
 	const beverage = "Cola"
 	vm := New(beverage)
 
@@ -40,6 +47,8 @@ func TestVendingMachine_1Coin(t *testing.T) {
 }
 
 func TestVendingMachine_nCoins(t *testing.T) {
+	log.Print("n coins")
+
 	const beverage = "Cola"
 	vm := New(beverage)
 
