@@ -2,7 +2,6 @@ package vendor
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 )
 
@@ -20,11 +19,11 @@ func New(products []string) *VendingMachine {
 
 func (vm *VendingMachine) Push(button int) (string, error) {
 	if button < 0 || button >= len(vm.products) {
-		return "", fmt.Errorf("given button does not exist: %d", button)
+		return "", InvalidButtonError{pushed: button}
 	}
 
 	if vm.coinCount <= 0 {
-		return "", errors.New("need more money")
+		return "", LackingMoneyError{}
 	}
 
 	vm.coinCount -= 1
