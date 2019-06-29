@@ -166,21 +166,26 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			vm := New(products)
 
-			for buyTime, ope := range tc.operations {
+			for _, ope := range tc.operations {
+				t.Logf("insert 100 yen %d times", ope.insertCount)
 				for i := 0; i < ope.insertCount; i++ {
 					vm.Insert100Yen()
 				}
 
-				for pushTime, p := range ope.pushes {
+				for _, p := range ope.pushes {
+					t.Logf("push %d button", p.button)
 					beverage, err := vm.Push(p.button)
-					t.Logf("buying %d pushing %d", buyTime, pushTime)
 					if beverage != p.wantBeverage {
-						t.Errorf("want beverage: %s", p.wantBeverage)
-						t.Errorf("got  beverage: %s", beverage)
+						t.Errorf("beverage want: \"%s\", got: \"%s\"",
+							p.wantBeverage,
+							beverage,
+						)
 					}
 					if !errorsAreSame(err, p.wantErr) {
-						t.Errorf("want error: %v", p.wantErr)
-						t.Errorf("got  error: %v", err)
+						t.Errorf("error    want: \"%v\", got: \"%v\"",
+							p.wantErr,
+							err,
+						)
 					}
 				}
 			}
