@@ -5,14 +5,14 @@ import (
 	"testing"
 )
 
-const cola = "Cola"
-const oolongTea = "Oolong Tea"
-const drPepper = "Dr.Pepper"
-const redBull = "Red Bull"
+var cola = Product{Name: "Cola", Price: 100}
+var oolongTea = Product{Name: "Oolong Tea", Price: 100}
+var drPepper = Product{Name: "Dr.Pepper", Price: 100}
+var redBull = Product{Name: "Red Bull", Price: 200}
+
+var products = []Product{cola, oolongTea, drPepper, redBull}
 
 func TestVendingMachine_use100Yen(t *testing.T) {
-	products := []string{cola, oolongTea, drPepper, redBull}
-
 	errLackingMoney := LackingMoneyError{}
 	errInvalidButton := InvalidButtonError{pushed: 4}
 
@@ -46,7 +46,7 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 1,
 					pushes: []pushing{
-						{0, cola, nil},
+						{0, cola.Name, nil},
 						{0, "", errLackingMoney},
 						{0, "", errLackingMoney},
 					},
@@ -59,19 +59,19 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 3,
 					pushes: []pushing{
-						{0, cola, nil},
-						{0, cola, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
 					},
 				},
 				{
 					insertCount: 5,
 					pushes: []pushing{
-						{0, cola, nil},
-						{0, cola, nil},
-						{0, cola, nil},
-						{0, cola, nil},
-						{0, cola, nil},
-						{0, cola, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
 						{0, "", errLackingMoney},
 						{0, "", errLackingMoney},
 					},
@@ -79,8 +79,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 2,
 					pushes: []pushing{
-						{0, cola, nil},
-						{0, cola, nil},
+						{0, cola.Name, nil},
+						{0, cola.Name, nil},
 						{0, "", errLackingMoney},
 						{0, "", errLackingMoney},
 					},
@@ -93,11 +93,11 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 4,
 					pushes: []pushing{
-						{1, oolongTea, nil},
-						{0, cola, nil},
-						{2, drPepper, nil},
+						{1, oolongTea.Name, nil},
+						{0, cola.Name, nil},
+						{2, drPepper.Name, nil},
 						{4, "", errInvalidButton},
-						{2, drPepper, nil},
+						{2, drPepper.Name, nil},
 						{1, "", errLackingMoney},
 						{2, "", errLackingMoney},
 						{4, "", errInvalidButton},
@@ -136,21 +136,21 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 func TestVendingMachine_ButtonDescription(t *testing.T) {
 	testcases := []struct {
 		name     string
-		products []string
+		products []Product
 		want     string
 	}{
 		{
 			name:     "no product",
-			products: []string{},
+			products: []Product{},
 			want:     "",
 		},
 		{
 			name:     "various products",
-			products: []string{cola, oolongTea, drPepper, redBull},
-			want: fmt.Sprintf("0: %s", cola) + "\n" +
-				fmt.Sprintf("1: %s", oolongTea) + "\n" +
-				fmt.Sprintf("2: %s", drPepper) + "\n" +
-				fmt.Sprintf("3: %s", redBull) + "\n",
+			products: products,
+			want: fmt.Sprintf("0: %s", cola.Name) + "\n" +
+				fmt.Sprintf("1: %s", oolongTea.Name) + "\n" +
+				fmt.Sprintf("2: %s", drPepper.Name) + "\n" +
+				fmt.Sprintf("3: %s", redBull.Name) + "\n",
 		},
 	}
 

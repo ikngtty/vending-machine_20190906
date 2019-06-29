@@ -6,11 +6,11 @@ import (
 )
 
 type VendingMachine struct {
-	products  []string
+	products  []Product
 	coinCount int
 }
 
-func New(products []string) *VendingMachine {
+func New(products []Product) *VendingMachine {
 	return &VendingMachine{
 		products:  products,
 		coinCount: 0,
@@ -27,7 +27,7 @@ func (vm *VendingMachine) Push(button int) (string, PkgError) {
 	}
 
 	vm.coinCount -= 1
-	return vm.products[button], nil
+	return vm.products[button].Name, nil
 }
 
 func (vm *VendingMachine) Insert100Yen() {
@@ -39,7 +39,7 @@ func (vm *VendingMachine) ButtonDescription() string {
 	buf := bytes.NewBuffer(nil)
 
 	for i, product := range vm.products {
-		buf.WriteString(fmt.Sprintf("%d: %s\n", i, product))
+		buf.WriteString(fmt.Sprintf("%d: %s\n", i, product.Name))
 	}
 
 	return buf.String()
