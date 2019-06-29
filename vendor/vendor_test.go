@@ -15,98 +15,91 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 
 	noButtonError := errors.New("given button does not exist: 3")
 
-	type operation struct {
-		insertCount   int
-		pushes        []int
-		wantBeverages []string
-		wantErrors    []error
+	type pushing struct {
+		button       int
+		wantBeverage string
+		wantErr      error
+	}
+	type buying struct {
+		insertCount int
+		pushes      []pushing
 	}
 	testcases := []struct {
 		name       string
-		operations []operation
+		operations []buying
 	}{
 		{
 			name: "no coin",
-			operations: []operation{
+			operations: []buying{
 				{
-					insertCount:   0,
-					pushes:        []int{0},
-					wantBeverages: []string{""},
-					wantErrors:    []error{nil},
+					insertCount: 0,
+					pushes: []pushing{
+						{0, "", nil},
+					},
 				},
 			},
 		},
 		{
 			name: "1 coin",
-			operations: []operation{
+			operations: []buying{
 				{
-					insertCount:   1,
-					pushes:        []int{0, 0, 0},
-					wantBeverages: []string{cola, "", ""},
-					wantErrors:    []error{nil, nil, nil},
+					insertCount: 1,
+					pushes: []pushing{
+						{0, cola, nil},
+						{0, "", nil},
+						{0, "", nil},
+					},
 				},
 			},
 		},
 		{
 			name: "n coins",
-			operations: []operation{
+			operations: []buying{
 				{
 					insertCount: 3,
-					pushes: []int{
-						0, 0,
-					},
-					wantBeverages: []string{
-						cola, cola,
-					},
-					wantErrors: []error{
-						nil, nil,
+					pushes: []pushing{
+						{0, cola, nil},
+						{0, cola, nil},
 					},
 				},
 				{
 					insertCount: 5,
-					pushes: []int{
-						0, 0, 0, 0,
-						0, 0, 0, 0,
-					},
-					wantBeverages: []string{
-						cola, cola, cola, cola,
-						cola, cola, "", "",
-					},
-					wantErrors: []error{
-						nil, nil, nil, nil,
-						nil, nil, nil, nil,
+					pushes: []pushing{
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, "", nil},
+						{0, "", nil},
 					},
 				},
 				{
 					insertCount: 2,
-					pushes: []int{
-						0, 0, 0, 0,
-					},
-					wantBeverages: []string{
-						cola, cola, "", "",
-					},
-					wantErrors: []error{
-						nil, nil, nil, nil,
+					pushes: []pushing{
+						{0, cola, nil},
+						{0, cola, nil},
+						{0, "", nil},
+						{0, "", nil},
 					},
 				},
 			},
 		},
 		{
 			name: "various beverages",
-			operations: []operation{
+			operations: []buying{
 				{
 					insertCount: 4,
-					pushes: []int{
-						1, 0, 2, 3,
-						2, 1, 2, 3,
-					},
-					wantBeverages: []string{
-						oolongTea, cola, drPepper, "",
-						drPepper, "", "", "",
-					},
-					wantErrors: []error{
-						nil, nil, nil, noButtonError,
-						nil, nil, nil, noButtonError,
+					pushes: []pushing{
+						{1, oolongTea, nil},
+						{0, cola, nil},
+						{2, drPepper, nil},
+						{3, "", noButtonError},
+						{2, drPepper, nil},
+						{1, "", nil},
+						{2, "", nil},
+						{3, "", noButtonError},
 					},
 				},
 			},
@@ -123,17 +116,15 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 					vm.Insert100Yen()
 				}
 
-				for i, button := range ope.pushes {
-					wantBeverage := ope.wantBeverages[i]
-					wantErr := ope.wantErrors[i]
-					beverage, err := vm.Push(button)
-					if beverage != wantBeverage {
-						t.Errorf("want beverage[%d]: %s", pushCount, wantBeverage)
+				for _, p := range ope.pushes {
+					beverage, err := vm.Push(p.button)
+					if beverage != p.wantBeverage {
+						t.Errorf("want beverage[%d]: %s", pushCount, p.wantBeverage)
 						t.Errorf("got  beverage[%d]: %s", pushCount, beverage)
 					}
-					if (wantErr == nil && err != nil) ||
-						(wantErr != nil && (err == nil || err.Error() != wantErr.Error())) {
-						t.Errorf("want error[%d]: %v", pushCount, wantErr)
+					if (p.wantErr == nil && err != nil) ||
+						(p.wantErr != nil && (err == nil || err.Error() != p.wantErr.Error())) {
+						t.Errorf("want error[%d]: %v", pushCount, p.wantErr)
 						t.Errorf("got  error[%d]: %v", pushCount, err)
 					}
 
