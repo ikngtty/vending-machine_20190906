@@ -110,6 +110,56 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "various price",
+			operations: []buying{
+				{
+					insertCount: 10,
+					pushes: []pushing{
+						{3, redBull.Name, nil},
+						{3, redBull.Name, nil},
+						{3, redBull.Name, nil},
+						{3, redBull.Name, nil},
+						{3, redBull.Name, nil},
+						{3, "", errLackingMoney},
+						{0, "", errLackingMoney},
+					},
+				},
+				{
+					insertCount: 5,
+					pushes: []pushing{
+						{3, redBull.Name, nil},
+						{3, redBull.Name, nil},
+						{3, "", errLackingMoney},
+						{0, cola.Name, nil},
+						{0, "", errLackingMoney},
+					},
+				},
+				{
+					insertCount: 5,
+					pushes: []pushing{
+						{0, cola.Name, nil},
+						{1, oolongTea.Name, nil},
+						{2, drPepper.Name, nil},
+						{3, redBull.Name, nil},
+						{0, "", errLackingMoney},
+					},
+				},
+				{
+					insertCount: 1,
+					pushes: []pushing{
+						{3, "", errLackingMoney},
+					},
+				},
+				{
+					insertCount: 1,
+					pushes: []pushing{
+						{3, redBull.Name, nil},
+						{0, "", errLackingMoney},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tc := range testcases {

@@ -6,14 +6,14 @@ import (
 )
 
 type VendingMachine struct {
-	products  []Product
-	coinCount int
+	products      []Product
+	insertedMoney int
 }
 
 func New(products []Product) *VendingMachine {
 	return &VendingMachine{
-		products:  products,
-		coinCount: 0,
+		products:      products,
+		insertedMoney: 0,
 	}
 }
 
@@ -22,16 +22,18 @@ func (vm *VendingMachine) Push(button int) (string, PkgError) {
 		return "", InvalidButtonError{pushed: button}
 	}
 
-	if vm.coinCount <= 0 {
+	targetProduct := vm.products[button]
+
+	if vm.insertedMoney < targetProduct.Price {
 		return "", LackingMoneyError{}
 	}
 
-	vm.coinCount -= 1
-	return vm.products[button].Name, nil
+	vm.insertedMoney -= targetProduct.Price
+	return targetProduct.Name, nil
 }
 
 func (vm *VendingMachine) Insert100Yen() {
-	vm.coinCount += 1
+	vm.insertedMoney += 100
 	return
 }
 
