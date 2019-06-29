@@ -17,7 +17,7 @@ func New(products []string) *VendingMachine {
 	}
 }
 
-func (vm *VendingMachine) Push(button int) (string, error) {
+func (vm *VendingMachine) Push(button int) (string, PkgError) {
 	if button < 0 || button >= len(vm.products) {
 		return "", InvalidButtonError{pushed: button}
 	}

@@ -1,9 +1,18 @@
 package vendor
 
-import "fmt"
+import (
+	"fmt"
+)
+
+type PkgError interface {
+	thisIsVendorError() // A marker interface
+	Kind() string
+	Error() string
+}
 
 type LackingMoneyError struct{}
 
+func (err LackingMoneyError) thisIsVendorError() {}
 func (err LackingMoneyError) Kind() string {
 	return "lacking_money"
 }
@@ -15,6 +24,7 @@ type InvalidButtonError struct {
 	pushed int
 }
 
+func (err InvalidButtonError) thisIsVendorError() {}
 func (err InvalidButtonError) Kind() string {
 	return "invalid_button"
 }

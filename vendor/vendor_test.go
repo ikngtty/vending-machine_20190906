@@ -18,7 +18,7 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 	type pushing struct {
 		button       int
 		wantBeverage string
-		wantErr      error
+		wantErr      PkgError
 	}
 	type buying struct {
 		insertCount int
