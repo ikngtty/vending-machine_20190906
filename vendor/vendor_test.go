@@ -1,7 +1,6 @@
 package vendor
 
 import (
-	"log"
 	"testing"
 )
 
@@ -62,8 +61,6 @@ func TestVendingMachine(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			log.Print(tc.name)
-
 			vm := New(beverage)
 			pushCount := 0
 
