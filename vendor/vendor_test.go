@@ -11,88 +11,6 @@ const oolongTea = "Oolong Tea"
 const drPepper = "Dr.Pepper"
 
 func TestVendingMachine_use100Yen(t *testing.T) {
-	products := []string{cola}
-
-	type operation struct {
-		insertCount int
-		wants       []string
-	}
-	testcases := []struct {
-		name       string
-		operations []operation
-	}{
-		{
-			name: "no coin",
-			operations: []operation{
-				{
-					insertCount: 0,
-					wants:       []string{""},
-				},
-			},
-		},
-		{
-			name: "1 coin",
-			operations: []operation{
-				{
-					insertCount: 1,
-					wants:       []string{cola, "", ""},
-				},
-			},
-		},
-		{
-			name: "n coins",
-			operations: []operation{
-				{
-					insertCount: 3,
-					wants: []string{
-						cola, cola,
-					},
-				},
-				{
-					insertCount: 5,
-					wants: []string{
-						cola, cola, cola, cola,
-						cola, cola, "", "",
-					},
-				},
-				{
-					insertCount: 2,
-					wants: []string{
-						cola, cola, "", "",
-					},
-				},
-			},
-		},
-	}
-
-	for _, tc := range testcases {
-		t.Run(tc.name, func(t *testing.T) {
-			vm := New(products)
-			pushCount := 0
-
-			for _, ope := range tc.operations {
-				for i := 0; i < ope.insertCount; i++ {
-					vm.Insert100Yen()
-				}
-
-				for _, want := range ope.wants {
-					got, err := vm.Push(0)
-					if got != want {
-						t.Errorf("wants [%d]: %s", pushCount, want)
-						t.Errorf("gots  [%d]: %s", pushCount, got)
-					}
-					if err != nil {
-						t.Errorf("errors[%d]: %s", pushCount, err)
-					}
-
-					pushCount++
-				}
-			}
-		})
-	}
-}
-
-func TestVendingMachine_use100YenForVariousBeverages(t *testing.T) {
 	products := []string{cola, oolongTea, drPepper}
 
 	noButtonError := errors.New("given button does not exist: 3")
@@ -107,6 +25,72 @@ func TestVendingMachine_use100YenForVariousBeverages(t *testing.T) {
 		name       string
 		operations []operation
 	}{
+		{
+			name: "no coin",
+			operations: []operation{
+				{
+					insertCount:   0,
+					pushes:        []int{0},
+					wantBeverages: []string{""},
+					wantErrors:    []error{nil},
+				},
+			},
+		},
+		{
+			name: "1 coin",
+			operations: []operation{
+				{
+					insertCount:   1,
+					pushes:        []int{0, 0, 0},
+					wantBeverages: []string{cola, "", ""},
+					wantErrors:    []error{nil, nil, nil},
+				},
+			},
+		},
+		{
+			name: "n coins",
+			operations: []operation{
+				{
+					insertCount: 3,
+					pushes: []int{
+						0, 0,
+					},
+					wantBeverages: []string{
+						cola, cola,
+					},
+					wantErrors: []error{
+						nil, nil,
+					},
+				},
+				{
+					insertCount: 5,
+					pushes: []int{
+						0, 0, 0, 0,
+						0, 0, 0, 0,
+					},
+					wantBeverages: []string{
+						cola, cola, cola, cola,
+						cola, cola, "", "",
+					},
+					wantErrors: []error{
+						nil, nil, nil, nil,
+						nil, nil, nil, nil,
+					},
+				},
+				{
+					insertCount: 2,
+					pushes: []int{
+						0, 0, 0, 0,
+					},
+					wantBeverages: []string{
+						cola, cola, "", "",
+					},
+					wantErrors: []error{
+						nil, nil, nil, nil,
+					},
+				},
+			},
+		},
 		{
 			name: "various beverages",
 			operations: []operation{
