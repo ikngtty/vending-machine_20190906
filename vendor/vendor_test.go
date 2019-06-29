@@ -6,8 +6,11 @@ import (
 	"testing"
 )
 
+const cola = "Cola"
+const oolongTea = "Oolong Tea"
+const drPepper = "Dr.Pepper"
+
 func TestVendingMachine_use100Yen(t *testing.T) {
-	const cola = "Cola"
 	products := []string{cola}
 
 	type operation struct {
@@ -90,9 +93,6 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 }
 
 func TestVendingMachine_use100YenForVariousBeverages(t *testing.T) {
-	const cola = "Cola"
-	const oolongTea = "Oolong Tea"
-	const drPepper = "Dr.Pepper"
 	products := []string{cola, oolongTea, drPepper}
 
 	noButtonError := errors.New("given button does not exist: 3")
@@ -161,10 +161,6 @@ func TestVendingMachine_use100YenForVariousBeverages(t *testing.T) {
 }
 
 func TestVendingMachine_ButtonDescription(t *testing.T) {
-	const cola = "Cola"
-	const oolong = "Oolong Tea"
-	const drPepper = "Dr.Pepper"
-
 	testcases := []struct {
 		name     string
 		products []string
@@ -177,9 +173,9 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 		},
 		{
 			name:     "various products",
-			products: []string{cola, oolong, drPepper},
+			products: []string{cola, oolongTea, drPepper},
 			want: fmt.Sprintf("0: %s", cola) + "\n" +
-				fmt.Sprintf("1: %s", oolong) + "\n" +
+				fmt.Sprintf("1: %s", oolongTea) + "\n" +
 				fmt.Sprintf("2: %s", drPepper) + "\n",
 		},
 	}
@@ -198,9 +194,6 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 }
 
 func TestVendingMachine_buyVariousBeverages(t *testing.T) {
-	const cola = "Cola"
-	const oolongTea = "Oolong Tea"
-	const drPepper = "Dr.Pepper"
 	products := []string{cola, oolongTea, drPepper}
 	vm := New(products)
 	for i := 0; i < 5; i++ {
