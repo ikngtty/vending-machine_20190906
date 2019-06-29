@@ -8,12 +8,13 @@ import (
 const cola = "Cola"
 const oolongTea = "Oolong Tea"
 const drPepper = "Dr.Pepper"
+const redBull = "Red Bull"
 
 func TestVendingMachine_use100Yen(t *testing.T) {
-	products := []string{cola, oolongTea, drPepper}
+	products := []string{cola, oolongTea, drPepper, redBull}
 
 	errLackingMoney := LackingMoneyError{}
-	errInvalidButton := InvalidButtonError{pushed: 3}
+	errInvalidButton := InvalidButtonError{pushed: 4}
 
 	type pushing struct {
 		button       int
@@ -95,11 +96,11 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						{1, oolongTea, nil},
 						{0, cola, nil},
 						{2, drPepper, nil},
-						{3, "", errInvalidButton},
+						{4, "", errInvalidButton},
 						{2, drPepper, nil},
 						{1, "", errLackingMoney},
 						{2, "", errLackingMoney},
-						{3, "", errInvalidButton},
+						{4, "", errInvalidButton},
 					},
 				},
 			},
@@ -145,10 +146,11 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 		},
 		{
 			name:     "various products",
-			products: []string{cola, oolongTea, drPepper},
+			products: []string{cola, oolongTea, drPepper, redBull},
 			want: fmt.Sprintf("0: %s", cola) + "\n" +
 				fmt.Sprintf("1: %s", oolongTea) + "\n" +
-				fmt.Sprintf("2: %s", drPepper) + "\n",
+				fmt.Sprintf("2: %s", drPepper) + "\n" +
+				fmt.Sprintf("3: %s", redBull) + "\n",
 		},
 	}
 
