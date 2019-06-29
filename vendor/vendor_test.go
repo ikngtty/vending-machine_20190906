@@ -1,7 +1,6 @@
 package vendor
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -11,6 +10,12 @@ var drPepper = Product{Name: "Dr.Pepper", Price: 100}
 var redBull = Product{Name: "Red Bull", Price: 200}
 
 var products = []Product{cola, oolongTea, drPepper, redBull}
+
+const description = `0: (100 yen) Cola
+1: (100 yen) Oolong Tea
+2: (100 yen) Dr.Pepper
+3: (200 yen) Red Bull
+`
 
 func TestVendingMachine_use100Yen(t *testing.T) {
 	errLackingMoney := LackingMoneyError{}
@@ -147,10 +152,7 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 		{
 			name:     "various products",
 			products: products,
-			want: fmt.Sprintf("0: %s", cola.Name) + "\n" +
-				fmt.Sprintf("1: %s", oolongTea.Name) + "\n" +
-				fmt.Sprintf("2: %s", drPepper.Name) + "\n" +
-				fmt.Sprintf("3: %s", redBull.Name) + "\n",
+			want:     description,
 		},
 	}
 

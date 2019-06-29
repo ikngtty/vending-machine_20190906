@@ -39,7 +39,12 @@ func (vm *VendingMachine) ButtonDescription() string {
 	buf := bytes.NewBuffer(nil)
 
 	for i, product := range vm.products {
-		buf.WriteString(fmt.Sprintf("%d: %s\n", i, product.Name))
+		buf.WriteString(fmt.Sprintf(
+			"%d: (%d yen) %s\n",
+			i,
+			product.Price,
+			product.Name,
+		))
 	}
 
 	return buf.String()
