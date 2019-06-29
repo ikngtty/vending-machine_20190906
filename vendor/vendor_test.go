@@ -1,7 +1,6 @@
 package vendor
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 )
@@ -13,8 +12,8 @@ const drPepper = "Dr.Pepper"
 func TestVendingMachine_use100Yen(t *testing.T) {
 	products := []string{cola, oolongTea, drPepper}
 
-	noMoneyError := errors.New("need more money")
-	noButtonError := errors.New("given button does not exist: 3")
+	errLackingMoney := LackingMoneyError{}
+	errInvalidButton := InvalidButtonError{pushed: 3}
 
 	type pushing struct {
 		button       int
@@ -35,7 +34,7 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 0,
 					pushes: []pushing{
-						{0, "", noMoneyError},
+						{0, "", errLackingMoney},
 					},
 				},
 			},
@@ -47,8 +46,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 					insertCount: 1,
 					pushes: []pushing{
 						{0, cola, nil},
-						{0, "", noMoneyError},
-						{0, "", noMoneyError},
+						{0, "", errLackingMoney},
+						{0, "", errLackingMoney},
 					},
 				},
 			},
@@ -72,8 +71,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						{0, cola, nil},
 						{0, cola, nil},
 						{0, cola, nil},
-						{0, "", noMoneyError},
-						{0, "", noMoneyError},
+						{0, "", errLackingMoney},
+						{0, "", errLackingMoney},
 					},
 				},
 				{
@@ -81,8 +80,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 					pushes: []pushing{
 						{0, cola, nil},
 						{0, cola, nil},
-						{0, "", noMoneyError},
-						{0, "", noMoneyError},
+						{0, "", errLackingMoney},
+						{0, "", errLackingMoney},
 					},
 				},
 			},
@@ -96,11 +95,11 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						{1, oolongTea, nil},
 						{0, cola, nil},
 						{2, drPepper, nil},
-						{3, "", noButtonError},
+						{3, "", errInvalidButton},
 						{2, drPepper, nil},
-						{1, "", noMoneyError},
-						{2, "", noMoneyError},
-						{3, "", noButtonError},
+						{1, "", errLackingMoney},
+						{2, "", errLackingMoney},
+						{3, "", errInvalidButton},
 					},
 				},
 			},
