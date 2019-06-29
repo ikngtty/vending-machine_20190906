@@ -2,12 +2,17 @@ package vendor
 
 import (
 	"fmt"
+	"reflect"
 )
 
 type PkgError interface {
 	thisIsVendorError() // A marker interface
 	Kind() string
 	Error() string
+}
+
+func errorsAreSame(left, right PkgError) bool {
+	return reflect.DeepEqual(left, right)
 }
 
 type LackingMoneyError struct{}

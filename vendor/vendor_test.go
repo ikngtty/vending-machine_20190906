@@ -122,8 +122,7 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						t.Errorf("want beverage: %s", p.wantBeverage)
 						t.Errorf("got  beverage: %s", beverage)
 					}
-					if (p.wantErr == nil && err != nil) ||
-						(p.wantErr != nil && (err == nil || err.Error() != p.wantErr.Error())) {
+					if !errorsAreSame(err, p.wantErr) {
 						t.Errorf("want error: %v", p.wantErr)
 						t.Errorf("got  error: %v", err)
 					}
