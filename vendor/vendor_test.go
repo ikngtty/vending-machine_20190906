@@ -89,30 +89,35 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 	const cola = "Cola"
 	const oolong = "Oolong Tea"
 	const drPepper = "Dr.Pepper"
-	products := []string{cola, oolong, drPepper}
-	vm := New(products)
 
-	want :=
-		fmt.Sprintf("0: %s", cola) + "\n" +
-			fmt.Sprintf("1: %s", oolong) + "\n" +
-			fmt.Sprintf("2: %s", drPepper) + "\n"
-	got := vm.ButtonDescription()
-
-	if got != want {
-		t.Errorf("want:\n%s", want)
-		t.Errorf("got :\n%s", got)
+	testcases := []struct {
+		name     string
+		products []string
+		want     string
+	}{
+		{
+			name:     "no product",
+			products: []string{},
+			want:     "",
+		},
+		{
+			name:     "various products",
+			products: []string{cola, oolong, drPepper},
+			want: fmt.Sprintf("0: %s", cola) + "\n" +
+				fmt.Sprintf("1: %s", oolong) + "\n" +
+				fmt.Sprintf("2: %s", drPepper) + "\n",
+		},
 	}
-}
 
-func TestVendingMachine_ButtonDescription_emptyProducts(t *testing.T) {
-	products := []string{}
-	vm := New(products)
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			vm := New(tc.products)
 
-	want := ""
-	got := vm.ButtonDescription()
-
-	if got != want {
-		t.Errorf("want:\n%s", want)
-		t.Errorf("got :\n%s", got)
+			got := vm.ButtonDescription()
+			if got != tc.want {
+				t.Errorf("want:\n%s", tc.want)
+				t.Errorf("got :\n%s", got)
+			}
+		})
 	}
 }
