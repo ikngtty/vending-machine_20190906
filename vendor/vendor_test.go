@@ -109,26 +109,24 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			vm := New(products)
-			pushCount := 0
 
-			for _, ope := range tc.operations {
+			for buyTime, ope := range tc.operations {
 				for i := 0; i < ope.insertCount; i++ {
 					vm.Insert100Yen()
 				}
 
-				for _, p := range ope.pushes {
+				for pushTime, p := range ope.pushes {
 					beverage, err := vm.Push(p.button)
+					t.Logf("buying %d pushing %d", buyTime, pushTime)
 					if beverage != p.wantBeverage {
-						t.Errorf("want beverage[%d]: %s", pushCount, p.wantBeverage)
-						t.Errorf("got  beverage[%d]: %s", pushCount, beverage)
+						t.Errorf("want beverage: %s", p.wantBeverage)
+						t.Errorf("got  beverage: %s", beverage)
 					}
 					if (p.wantErr == nil && err != nil) ||
 						(p.wantErr != nil && (err == nil || err.Error() != p.wantErr.Error())) {
-						t.Errorf("want error[%d]: %v", pushCount, p.wantErr)
-						t.Errorf("got  error[%d]: %v", pushCount, err)
+						t.Errorf("want error: %v", p.wantErr)
+						t.Errorf("got  error: %v", err)
 					}
-
-					pushCount++
 				}
 			}
 		})
