@@ -1,11 +1,13 @@
 package vendor
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestVendingMachine(t *testing.T) {
-	const beverage = "Cola"
+func TestVendingMachine_use100Yen(t *testing.T) {
+	const cola = "Cola"
+	products := []string{cola}
 
 	type operation struct {
 		insertCount int
@@ -29,7 +31,7 @@ func TestVendingMachine(t *testing.T) {
 			operations: []operation{
 				{
 					insertCount: 1,
-					wants:       []string{beverage, "", ""},
+					wants:       []string{cola, "", ""},
 				},
 			},
 		},
@@ -39,20 +41,20 @@ func TestVendingMachine(t *testing.T) {
 				{
 					insertCount: 3,
 					wants: []string{
-						beverage, beverage,
+						cola, cola,
 					},
 				},
 				{
 					insertCount: 5,
 					wants: []string{
-						beverage, beverage, beverage, beverage,
-						beverage, beverage, "", "",
+						cola, cola, cola, cola,
+						cola, cola, "", "",
 					},
 				},
 				{
 					insertCount: 2,
 					wants: []string{
-						beverage, beverage, "", "",
+						cola, cola, "", "",
 					},
 				},
 			},
@@ -61,7 +63,7 @@ func TestVendingMachine(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			vm := New(beverage)
+			vm := New(products)
 			pushCount := 0
 
 			for _, ope := range tc.operations {
@@ -80,5 +82,37 @@ func TestVendingMachine(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestVendingMachine_ButtonDescription(t *testing.T) {
+	const cola = "Cola"
+	const oolong = "Oolong Tea"
+	const drPepper = "Dr.Pepper"
+	products := []string{cola, oolong, drPepper}
+	vm := New(products)
+
+	want :=
+		fmt.Sprintf("0: %s", cola) + "\n" +
+			fmt.Sprintf("1: %s", oolong) + "\n" +
+			fmt.Sprintf("2: %s", drPepper) + "\n"
+	got := vm.ButtonDescription()
+
+	if got != want {
+		t.Errorf("want:\n%s", want)
+		t.Errorf("got :\n%s", got)
+	}
+}
+
+func TestVendingMachine_ButtonDescription_emptyProducts(t *testing.T) {
+	products := []string{}
+	vm := New(products)
+
+	want := ""
+	got := vm.ButtonDescription()
+
+	if got != want {
+		t.Errorf("want:\n%s", want)
+		t.Errorf("got :\n%s", got)
 	}
 }
