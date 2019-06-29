@@ -2,6 +2,7 @@ package vendor
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 )
 
@@ -23,7 +24,7 @@ func (vm *VendingMachine) Push(button int) (string, error) {
 	}
 
 	if vm.coinCount <= 0 {
-		return "", nil
+		return "", errors.New("need more money")
 	}
 
 	vm.coinCount -= 1

@@ -13,6 +13,7 @@ const drPepper = "Dr.Pepper"
 func TestVendingMachine_use100Yen(t *testing.T) {
 	products := []string{cola, oolongTea, drPepper}
 
+	noMoneyError := errors.New("need more money")
 	noButtonError := errors.New("given button does not exist: 3")
 
 	type pushing struct {
@@ -34,7 +35,7 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 				{
 					insertCount: 0,
 					pushes: []pushing{
-						{0, "", nil},
+						{0, "", noMoneyError},
 					},
 				},
 			},
@@ -46,8 +47,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 					insertCount: 1,
 					pushes: []pushing{
 						{0, cola, nil},
-						{0, "", nil},
-						{0, "", nil},
+						{0, "", noMoneyError},
+						{0, "", noMoneyError},
 					},
 				},
 			},
@@ -71,8 +72,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						{0, cola, nil},
 						{0, cola, nil},
 						{0, cola, nil},
-						{0, "", nil},
-						{0, "", nil},
+						{0, "", noMoneyError},
+						{0, "", noMoneyError},
 					},
 				},
 				{
@@ -80,8 +81,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 					pushes: []pushing{
 						{0, cola, nil},
 						{0, cola, nil},
-						{0, "", nil},
-						{0, "", nil},
+						{0, "", noMoneyError},
+						{0, "", noMoneyError},
 					},
 				},
 			},
@@ -97,8 +98,8 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 						{2, drPepper, nil},
 						{3, "", noButtonError},
 						{2, drPepper, nil},
-						{1, "", nil},
-						{2, "", nil},
+						{1, "", noMoneyError},
+						{2, "", noMoneyError},
 						{3, "", noButtonError},
 					},
 				},
