@@ -1,6 +1,7 @@
 package vendor
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -10,12 +11,6 @@ var drPepper = Product{Name: "Dr.Pepper", Price: 100}
 var redBull = Product{Name: "Red Bull", Price: 200}
 
 var products = []Product{cola, oolongTea, drPepper, redBull}
-
-const description = `0: (100 yen) Cola
-1: (100 yen) Oolong Tea
-2: (100 yen) Dr.Pepper
-3: (200 yen) Red Bull
-`
 
 func TestVendingMachine_use100Yen(t *testing.T) {
 	errLackingMoney := LackingMoneyError{}
@@ -193,21 +188,26 @@ func TestVendingMachine_use100Yen(t *testing.T) {
 	}
 }
 
-func TestVendingMachine_ButtonDescription(t *testing.T) {
+func TestVendingMachine_ButtonsDescription(t *testing.T) {
 	testcases := []struct {
 		name     string
 		products []Product
-		want     string
+		want     []ButtonDescription
 	}{
 		{
 			name:     "no product",
 			products: []Product{},
-			want:     "",
+			want:     []ButtonDescription{},
 		},
 		{
 			name:     "various products",
 			products: products,
-			want:     description,
+			want: []ButtonDescription{
+				{Button: 0, Product: cola},
+				{Button: 1, Product: oolongTea},
+				{Button: 2, Product: drPepper},
+				{Button: 3, Product: redBull},
+			},
 		},
 	}
 
@@ -215,10 +215,10 @@ func TestVendingMachine_ButtonDescription(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			vm := New(tc.products)
 
-			got := vm.ButtonDescription()
-			if got != tc.want {
-				t.Errorf("want:\n%s", tc.want)
-				t.Errorf("got :\n%s", got)
+			got := vm.ButtonsDescription()
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("want:\n%#v", tc.want)
+				t.Errorf("got :\n%#v", got)
 			}
 		})
 	}

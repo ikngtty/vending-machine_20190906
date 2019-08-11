@@ -1,10 +1,5 @@
 package vendor
 
-import (
-	"bytes"
-	"fmt"
-)
-
 type VendingMachine struct {
 	products      []Product
 	insertedMoney int
@@ -37,17 +32,12 @@ func (vm *VendingMachine) Insert100Yen() {
 	return
 }
 
-func (vm *VendingMachine) ButtonDescription() string {
-	buf := bytes.NewBuffer(nil)
+func (vm *VendingMachine) ButtonsDescription() []ButtonDescription {
+	descriptions := make([]ButtonDescription, len(vm.products))
 
 	for i, product := range vm.products {
-		buf.WriteString(fmt.Sprintf(
-			"%d: (%d yen) %s\n",
-			i,
-			product.Price,
-			product.Name,
-		))
+		descriptions[i] = ButtonDescription{Button: i, Product: product}
 	}
 
-	return buf.String()
+	return descriptions
 }
